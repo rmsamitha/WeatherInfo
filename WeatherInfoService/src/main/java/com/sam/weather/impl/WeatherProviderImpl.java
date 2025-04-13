@@ -52,7 +52,7 @@ public class WeatherProviderImpl {
      * @param cityName Name of the city for which to retrieve weather data.
      * @return WeatherInfo object containing weather data for the specified city.
      */
-    public WeatherInfo getWeatherData(String cityName) {
+    public WeatherInfo getWeatherDataByCity(String cityName) {
         // TODO: Implement retrieval from persistent storage
         // Simulate fetching weather data from in-memory data
         WeatherInfo weatherInfo = getInMemoryWeatherData(cityName);
@@ -63,8 +63,9 @@ public class WeatherProviderImpl {
             // Create http client and make a request to an external weather info API
             CloseableHttpClient httpClient = WeatherImplUtils.getHttpClient();
             // appid given is incorrect and will give 401 error
-            HttpGet httpGetRequest = new HttpGet(externalWeatherInfoApiUrl + "?q=" + cityName + "&appid=439d4b804bc8187953eb36d2a8c26a02");
-            
+            HttpGet httpGetRequest = new HttpGet(externalWeatherInfoApiUrl + "?q=" + cityName + "&appid" +
+                    "=439d4b804bc8187953eb36d2a8c26a02");
+
             try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
                 if (response.getStatusLine().getStatusCode() == 200) {
                     // hardcoded WeatherInfo object for simulation purposes
@@ -90,8 +91,6 @@ public class WeatherProviderImpl {
             return weatherInfoWellington;
         } else if (cityName.equalsIgnoreCase(CHRISTCHURCH)) {
             return weatherInfoChristchurch;
-        } else if (cityName.equalsIgnoreCase(WAIKATO)) {
-            return weatherInfoWaikato;
         } else {
             return null; // No data available for the given city
         }
