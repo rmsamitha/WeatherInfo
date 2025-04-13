@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-
 package com.sam.weather.impl;
 
 import com.sam.weather.models.WeatherInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+
+import java.io.IOException;
 
 public class WeatherProviderImpl {
     private static final String AUCKLAND = "Auckland";
@@ -32,6 +38,8 @@ public class WeatherProviderImpl {
     WeatherInfo weatherInfoWaikato = new WeatherInfo(WAIKATO, 10, 30, 23, 33);
 
     private static final WeatherProviderImpl instance = new WeatherProviderImpl();
+    String externalWeatherInfoApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+    private static final Log log = LogFactory.getLog(WeatherProviderImpl.class);
 
     private WeatherProviderImpl() {
     }
@@ -50,9 +58,28 @@ public class WeatherProviderImpl {
         // TODO: Implement retrieval from persistent storage
         // Simulate fetching weather data from in-memory data
         WeatherInfo weatherInfo = getInMemoryWeatherData(cityName);
+        log.info("Getting weather data for city: " + cityName);
+
+        // If no data is found in memory matching to the hardcoded city names, make an HTTP request to the external API
         if (weatherInfo == null) {
-            // Call to an external REST API to fetch weather data
-            weatherInfo = new WeatherInfo(cityName, 15, 43, 33, 26);
+            // Create http client and make a request to an external weather info API
+            CloseableHttpClient httpClient = WeatherImplUtils.getHttpClient();
+            // appid given is incorrect and will give 401 error
+            HttpGet httpGetRequest = new HttpGet(externalWeatherInfoApiUrl + "?q=" + cityName + "&appid=439d4b804bc8187953eb36d2a8c26a02");
+            
+            try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    // hardcoded WeatherInfo object for simulation purposes
+                    weatherInfo = new WeatherInfo(cityName, 15, 43, 33, 26);
+                } else {
+                    // Here ideally we should handle the error response. But for simulation purposes we are just
+                    // mocking the response since the API key is not valid and an 401 status code is expected.
+                    weatherInfo = new WeatherInfo(cityName, 15, 43, 33, 26);
+                }
+            } catch (IOException e) {
+                // TODO: Handle exceptions
+                e.printStackTrace();
+            }
         }
 
         return weatherInfo;
