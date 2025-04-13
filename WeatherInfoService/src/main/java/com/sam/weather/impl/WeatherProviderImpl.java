@@ -29,13 +29,11 @@ public class WeatherProviderImpl {
     private static final String AUCKLAND = "Auckland";
     private static final String WELLINGTON = "Wellington";
     private static final String CHRISTCHURCH = "Christchurch";
-    private static final String WAIKATO = "Waikato";
 
     // Example in-memory weather data for different cities for simulation purposes
     WeatherInfo weatherInfoAuckland = new WeatherInfo(AUCKLAND, 15, 43, 33, 26);
     WeatherInfo weatherInfoWellington = new WeatherInfo(WELLINGTON, 20, 50, 40, 30);
     WeatherInfo weatherInfoChristchurch = new WeatherInfo(CHRISTCHURCH, 10, 30, 20, 15);
-    WeatherInfo weatherInfoWaikato = new WeatherInfo(WAIKATO, 10, 30, 23, 33);
 
     private static final WeatherProviderImpl instance = new WeatherProviderImpl();
     String externalWeatherInfoApiUrl = "https://api.openweathermap.org/data/2.5/weather";
@@ -70,11 +68,11 @@ public class WeatherProviderImpl {
             try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
                 if (response.getStatusLine().getStatusCode() == 200) {
                     // hardcoded WeatherInfo object for simulation purposes
-                    weatherInfo = new WeatherInfo(cityName, 15, 43, 33, 26);
+                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
                 } else {
                     // Here ideally we should handle the error response. But for simulation purposes we are just
                     // mocking the response since the API key is not valid and an 401 status code is expected.
-                    weatherInfo = new WeatherInfo(cityName, 15, 43, 33, 26);
+                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
                 }
             } catch (IOException e) {
                 // TODO: Handle exceptions
