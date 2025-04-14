@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="WeatherServiceTestSuite" verbose="2" parallel="false">
+    <test name="WeatherServiceIntegrationTests">
+        <classes>
+            <class name="com.sam.weather.integration.WeatherServiceIntegrationTest"/>
+        </classes>
+    </test>
+</suite>
