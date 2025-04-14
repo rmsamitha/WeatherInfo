@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Weather Service API
+  version: 1.0.0
+  description: JAX-RS-based API to get current weather and forecast information by city or coordinates.
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /weather/current/city:
+    get:
+      summary: Get current weather by city
+      parameters:
+        - in: query
+          name: city
+          required: true
+          schema:
+            type: string
+          description: Name of the city
+      responses:
+        '200':
+          description: Weather data returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherInfo'
+        '400':
+          description: Bad request - missing or invalid city parameter
+        '500':
+          description: Internal server error
+
+  /weather/current/coordinate:
+    get:
+      summary: Get current weather by coordinates
+      parameters:
+        - in: query
+          name: long
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Longitude
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Latitude
+      responses:
+        '200':
+          description: Weather data returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherInfo'
+        '400':
+          description: Bad request - missing or invalid city parameter
+        '500':
+          description: Internal server error
+
+  /weather/current/city/temperature:
+    get:
+      summary: Get temperature by city
+      parameters:
+        - in: query
+          name: city
+          required: true
+          schema:
+            type: string
+          description: City name
+      responses:
+        '200':
+          description: Weather data returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemperatureInfo'
+        '400':
+          description: Bad request - missing or invalid city parameter
+        '500':
+          description: Internal server error
+
+  /weather/forecast/city:
+    get:
+      summary: Get weather forecast by city and date
+      parameters:
+        - in: query
+          name: city
+          required: true
+          schema:
+            type: string
+          description: Name of the city
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Forecast date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Weather data returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherInfo'
+        '400':
+          description: Bad request - missing or invalid city parameter
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    WeatherInfo:
+      type: object
+      properties:
+        city:
+          type: string
+        temperature:
+          type: number
+          format: float
+        condition:
+          type: string
+        humidity:
+          type: integer
+        windSpeed:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    TemperatureInfo:
+      type: object
+      properties:
+        city:
+          type: string
+        temperature:
+          type: number
+          format: float
