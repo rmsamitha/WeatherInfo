@@ -17,9 +17,6 @@
 package com.sam.weather.services;
 
 import com.sam.weather.impl.WeatherProviderImpl;
-import com.sam.weather.models.Temperature;
-import com.sam.weather.models.WeatherInfo;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -56,7 +53,6 @@ public class WeatherService {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
-    // implement endpoint to get weather forecast for a city
     @GET
     @Path("/forecast/city")
     @Produces({"application/json"})

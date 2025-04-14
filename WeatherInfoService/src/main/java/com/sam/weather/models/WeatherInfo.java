@@ -16,6 +16,10 @@
 
 package com.sam.weather.models;
 
+/**
+ * WeatherInfo class represents the weather information for a specific city.
+ * It contains details such as temperature, precipitation, humidity, and wind speed.
+ */
 public class WeatherInfo {
     private String cityName;
     private int temperature;

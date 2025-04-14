@@ -26,6 +26,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
+/**
+ * WeatherProviderImpl is a singleton class that provides weather data for different cities.
+ * It retrieves weather information either from in-memory data or by making an HTTP request to an external API.
+ */
 public class WeatherProviderImpl {
     private static final String AUCKLAND = "Auckland";
     private static final String WELLINGTON = "Wellington";
@@ -74,12 +78,12 @@ public class WeatherProviderImpl {
 
             try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
                 if (response.getStatusLine().getStatusCode() == 401) { // similar to 200 implementation
-                    // hardcoded WeatherInfo object for simulation purposes
+                    // Since the external API is not authenticated, it will return 401 always. Hence hardcoded
+                    // WeatherInfo object for simulation purposes
                     weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
                 } else if (response.getStatusLine().getStatusCode() == 200) {
                     // Here we should ideally parse the response and create a WeatherInfo object from it.
                     weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
-                    // Here ideally we should handle the error response. But for simulation purposes we are just
                 } else {
                     String errorDescription = "Error occurred from the external weather info API: " +
                             response.getStatusLine().getReasonPhrase();
@@ -93,6 +97,12 @@ public class WeatherProviderImpl {
         return Response.ok().entity(weatherInfo).build();
     }
 
+    /**
+     * Retrieves weather data from in-memory storage based on the city name.
+     *
+     * @param cityName Name of the city for which to retrieve weather data.
+     * @return WeatherInfo object containing weather data for the specified city.
+     */
     private WeatherInfo getInMemoryWeatherData(String cityName) {
         if (cityName.equalsIgnoreCase(AUCKLAND)) {
             return weatherInfoAuckland;
@@ -101,7 +111,7 @@ public class WeatherProviderImpl {
         } else if (cityName.equalsIgnoreCase(CHRISTCHURCH)) {
             return weatherInfoChristchurch;
         } else {
-            return null; // No data available for the given city
+            return null; // No data available for the given city in memory
         }
     }
 }
