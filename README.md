@@ -1,29 +1,80 @@
-# WeatherInfoService Docs
+# Weather Information Service Implementation
 
 ## Assumptions
 
-1. This is a service created only to retrieve weather information (updating or adding weather information is not supported as the requirement stated is to "provides current weather data for different cities (upto 3)")
+- This is a service created only to retrieve weather information (updating or adding weather information is not supported as the requirement stated is to "provide current weather data for different cities (upto 3)").
+- It is stated in the guidelines that the weather data can be stored in-memory. So the weather data of 3 cities are hardcoded in the WeatherProviderImpl class, hence will be loaded into memory in the run-time.
+- Since it is instructed that it is possible to mock the external weather info REST api request and response, I have mocked the response of that call. (request is implemented writing relevant httpClient implementation code making a request to online available weather API. Authentication of that REST API is not deone, hence the request fails always with 401 error, hence I have mocked a response when the response status code is 401).
 
+## Special Notes
+
+- Only few REST API resources are defined as this is a prototype REST API implementation
+- Only single REST API resource (GET /weahther/current/city) is implemented fully too. (others can be implemented if needed)
+- Only integration test is written. It tests the implemented REST API operation.
+- Java project of the implementation is in "WeatherInfoService" directory in the repository root. (it will be introduced as <PROJECT_ROOT>)
+
+## Abstract Design of the Implementation
 
 ![Weather API Diagram](./abstract-design.png)
-## How to Build
 
-## How to invoke the service
+## Technologies Used
 
-### Documentation for Authorization
+- Java with JAX-RS, Apache CXF
+- This is an implementation of a JAX-RS REST API.
+- Apache CXF is the web service framework used to implement JAX-RS (REST) APIs
 
-Endpoints do not require authorization.
+## How to Build and Deploy
 
-### Documentation for API Endpoints
+1. To build the project, run below command from within the <PROJECT_ROOT> dir.
 
-All URIs are relative to the server url in which the service is deployed.
-i.e. Local Tomcat Server: *http://localhost:8080*
+```shell
+mvn clean install
+```
+A war file named WeatherInfoService.war file is created by above build operation in ```target/``` dir
 
- Method | HTTP request | Description
-| ------------- | ------------- | -------------
-[**weatherCurrentCityGet**](docs/DefaultApi.md#weatherCurrentCityGet) | **GET** /weather/current/city | Get current weather by city
-[**weatherCurrentCityTemperatureGet**](docs/DefaultApi.md#weatherCurrentCityTemperatureGet) | **GET** /weather/current/city/temperature | Get temperature by city
-[**weatherCurrentCoordinateGet**](docs/DefaultApi.md#weatherCurrentCoordinateGet) | **GET** /weather/current/coordinate | Get current weather by coordinates
-[**weatherForecastCityGet**](docs/DefaultApi.md#weatherForecastCityGet) | **GET** /weather/forecast/city | Get weather forecast by city and date
+2. Deploy this WeatherInfoService.war file in a preferred web server.
+(I'm testing this in a local tomcat server. The shell scrip used to copy the .war file is uploaded in this git repository. i.e. <REPO_ROOT>/deploy_weatherinfo.sh )
 
 
+## API Endpoints Invocation
+
+The API Resources exposed by this service are listed below
+
+| HTTP Method                                                                                      | HTTP Request Path                              | Description                           |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------- |
+| GET                     | /weather/current/city             | Get current weather by city           |
+| GET | /weather/current/city/temperature | Get temperature by city               |
+| GET         | /weather/current/coordinate       | Get current weather by coordinates    |
+| GET                  | /weather/forecast/city            | Get weather forecast by city and date |
+
+ - **GET** /weather/current/city Endpoint is implemented fully and can be invoked by a http client as below.
+
+ #### Sample Request: (CURL Command)
+
+ *Format:*
+
+ ```js 
+ curl -X GET "http://localhost:8080/WeatherInfoService/weather/current/city?city=<CITY_NAME>" 
+ ```
+ 
+ *Sample Command:*
+
+ ```js
+ curl -X GET "http://localhost:8080/WeatherInfoService/weather/current/city?city=Auckland" 
+ ```
+
+*Sample Response:*
+```json
+{"cityName":"Auckland","temperature":15,"precipitation":43,"humidity":33,"windSpeed":26}
+```
+
+### Endpoints Authorization
+
+Endpoints exposed are not protected with any authentication/authorization mechanism.
+
+## Automation Tests
+- Integration tests are implemented with the use of Testng 
+- The maven-surefire-plugin is used to run integration tests during the build process.
+i.e. ```mvn test``` command will run the integration tests on the service deployed in a server and exposed on "https://localhost:8080/"
+- So make sure to deploy the server before running tests. (local Tomcat server can be used for this).
+- Starting an embedded server when running the tests is also possible, but it is not implemented at this phase.
