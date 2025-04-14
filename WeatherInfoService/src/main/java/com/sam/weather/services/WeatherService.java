@@ -21,6 +21,7 @@ import com.sam.weather.models.Temperature;
 import com.sam.weather.models.WeatherInfo;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 @Path("/weather")
 @Consumes({"application/json"})
@@ -30,8 +31,7 @@ public class WeatherService {
     @Path("/current/city")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    //TODO: Need to change to return Response object
-    public WeatherInfo getWeatherByCity(@QueryParam("city") String cityName) {
+    public Response getWeatherByCity(@QueryParam("city") String cityName) {
         WeatherProviderImpl weatherProvider = WeatherProviderImpl.getInstance();
         return weatherProvider.getWeatherDataByCity(cityName);
     }
@@ -40,11 +40,10 @@ public class WeatherService {
     @Path("/current/coordinate")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public WeatherInfo getWeatherByCoordinates(@QueryParam("long") double longitude,
+    public Response getWeatherByCoordinates(@QueryParam("long") double longitude,
                                                @QueryParam("lat") double latitude) {
         // TODO: Implement logic to fetch weather data using longitude and latitude
-        // For now, returning a dummy WeatherInfo object
-        return new WeatherInfo("Tauranga", 25, 10, 50, 15);
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     @GET
@@ -52,20 +51,18 @@ public class WeatherService {
     @Consumes({"application/json"})
     @Produces({"application/json"})
     //TODO: Need to change to return Response object
-    public Temperature getTemperatureByCity(@QueryParam("city") String cityName) {
+    public Response getTemperatureByCity(@QueryParam("city") String cityName) {
         // TODO: Implement logic to fetch temperature data for the specified city
-        // For now, returning a dummy Temperature object
-        return new Temperature();
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
-    // implement endpoint to get weather forcast for a city
+    // implement endpoint to get weather forecast for a city
     @GET
     @Path("/forecast/city")
     @Produces({"application/json"})
-    public WeatherInfo getWeatherForecastByCity(@QueryParam("city") String cityName,
+    public Response getWeatherForecastByCity(@QueryParam("city") String cityName,
                                                 @QueryParam("date") String date) {
         // TODO: Implement logic to fetch weather forecast data for the specified city on the given date
-        // For now, returning a dummy WeatherInfo object
-        return new WeatherInfo(cityName, 18, 60, 40, 20);
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }

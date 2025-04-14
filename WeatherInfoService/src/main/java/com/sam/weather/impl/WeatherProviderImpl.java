@@ -23,6 +23,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 public class WeatherProviderImpl {
@@ -52,14 +53,19 @@ public class WeatherProviderImpl {
      * @param cityName Name of the city for which to retrieve weather data.
      * @return WeatherInfo object containing weather data for the specified city.
      */
-    public WeatherInfo getWeatherDataByCity(String cityName) {
+    public Response getWeatherDataByCity(String cityName) {
+        if (cityName == null || cityName.isEmpty()) {
+            String errorDescription = "City name cannot be null or empty.";
+            return WeatherImplUtils.buildBadRequestResponse(errorDescription);
+        }
         // TODO: Implement retrieval from persistent storage
         // Simulate fetching weather data from in-memory data
         WeatherInfo weatherInfo = getInMemoryWeatherData(cityName);
-        log.info("Getting weather data for city: " + cityName);
+        log.debug("Getting weather data for city: " + cityName);
 
         // If no data is found in memory matching to the hardcoded city names, make an HTTP request to the external API
         if (weatherInfo == null) {
+            log.debug("No weather data found for city: " + cityName + ". Making an HTTP request to external API.");
             // Create http client and make a request to an external weather info API
             CloseableHttpClient httpClient = WeatherImplUtils.getHttpClient();
             // appid given is incorrect and will give 401 error
@@ -67,21 +73,24 @@ public class WeatherProviderImpl {
                     "=439d4b804bc8187953eb36d2a8c26a02");
 
             try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
-                if (response.getStatusLine().getStatusCode() == 200) {
+                if (response.getStatusLine().getStatusCode() == 401) { // similar to 200 implementation
                     // hardcoded WeatherInfo object for simulation purposes
                     weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
-                } else {
-                    // Here ideally we should handle the error response. But for simulation purposes we are just
-                    // mocking the response since the API key is not valid and an 401 status code is expected.
+                } else if (response.getStatusLine().getStatusCode() == 200) {
+                    // Here we should ideally parse the response and create a WeatherInfo object from it.
                     weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
+                    // Here ideally we should handle the error response. But for simulation purposes we are just
+                } else {
+                    String errorDescription = "Error occurred from the external weather info API: " +
+                            response.getStatusLine().getReasonPhrase();
+                    return WeatherImplUtils.buildInternalServerErrorResponse(errorDescription);
                 }
             } catch (IOException e) {
-                // TODO: Handle exceptions
-                e.printStackTrace();
+                String errorDescription = "Error occurred while connecting to external API: " + e.getMessage();
+                return WeatherImplUtils.buildBadGatewayResponse(errorDescription);
             }
         }
-
-        return weatherInfo;
+        return Response.ok().entity(weatherInfo).build();
     }
 
     private WeatherInfo getInMemoryWeatherData(String cityName) {
