@@ -12,11 +12,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import com.google.gson.Gson;
 
-public class WeatherServiceIntegrationTest {
+public class WeatherServiceIntegrationTestCase {
     private static CloseableHttpClient httpClient;
     private static final String SERVICE_BASE_URL = "http://localhost:8080/WeatherInfoService/weather";
 
-    private static final Log log = LogFactory.getLog(WeatherServiceIntegrationTest.class);
+    private static final Log log = LogFactory.getLog(WeatherServiceIntegrationTestCase.class);
     private static final String IN_MEMORY_AVAILABLE_CITY_AUCKLAND = "Auckland";
     private static final String IN_MEMORY_UNAVAILABLE_CITY_WAIKATO = "Waikato";
 
