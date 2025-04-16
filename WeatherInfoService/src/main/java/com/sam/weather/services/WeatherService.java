@@ -17,6 +17,7 @@
 package com.sam.weather.services;
 
 import com.sam.weather.impl.WeatherProviderImpl;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -25,26 +26,17 @@ import javax.ws.rs.core.Response;
 @Produces({"application/json"})
 public class WeatherService {
     @GET
-    @Path("/current/city")
+    @Path("/current")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response getWeatherByCity(@QueryParam("city") String cityName) {
+    public Response getCurrentWeather(@QueryParam("city") String cityName, @QueryParam("long") String longitude,
+                                      @QueryParam("lat") String latitude) {
         WeatherProviderImpl weatherProvider = WeatherProviderImpl.getInstance();
-        return weatherProvider.getWeatherDataByCity(cityName);
+        return weatherProvider.getCurrentWeather(cityName, longitude, latitude);
     }
 
     @GET
-    @Path("/current/coordinate")
-    @Consumes({"application/json"})
-    @Produces({"application/json"})
-    public Response getWeatherByCoordinates(@QueryParam("long") double longitude,
-                                               @QueryParam("lat") double latitude) {
-        // TODO: Implement logic to fetch weather data using longitude and latitude
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
-
-    @GET
-    @Path("/current/city/temperature")
+    @Path("/current/temperature")
     @Consumes({"application/json"})
     @Produces({"application/json"})
     //TODO: Need to change to return Response object
@@ -56,8 +48,7 @@ public class WeatherService {
     @GET
     @Path("/forecast/city")
     @Produces({"application/json"})
-    public Response getWeatherForecastByCity(@QueryParam("city") String cityName,
-                                                @QueryParam("date") String date) {
+    public Response getWeatherForecastByCity(@QueryParam("city") String cityName, @QueryParam("date") String date) {
         // TODO: Implement logic to fetch weather forecast data for the specified city on the given date
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }

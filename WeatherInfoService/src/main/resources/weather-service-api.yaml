@@ -7,11 +7,11 @@ info:
 servers:
   - url: http://localhost:8080
     description: Local server
-
+security:
 paths:
-  /weather/current/city:
+  /weather/current:
     get:
-      summary: Get current weather by city
+      summary: Get current weather by city or cordinates
       parameters:
         - in: query
           name: city
@@ -19,35 +19,17 @@ paths:
           schema:
             type: string
           description: Name of the city
-      responses:
-        '200':
-          description: Weather data returned successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WeatherInfo'
-        '400':
-          description: Bad request - missing or invalid city parameter
-        '500':
-          description: Internal server error
-
-  /weather/current/coordinate:
-    get:
-      summary: Get current weather by coordinates
-      parameters:
         - in: query
           name: long
           required: true
           schema:
-            type: number
-            format: float
+            type: string
           description: Longitude
         - in: query
           name: lat
           required: true
           schema:
-            type: number
-            format: float
+            type: string
           description: Latitude
       responses:
         '200':
@@ -61,29 +43,7 @@ paths:
         '500':
           description: Internal server error
 
-  /weather/current/city/temperature:
-    get:
-      summary: Get temperature by city
-      parameters:
-        - in: query
-          name: city
-          required: true
-          schema:
-            type: string
-          description: City name
-      responses:
-        '200':
-          description: Weather data returned successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TemperatureInfo'
-        '400':
-          description: Bad request - missing or invalid city parameter
-        '500':
-          description: Internal server error
-
-  /weather/forecast/city:
+  /weather/forecast:
     get:
       summary: Get weather forecast by city and date
       parameters:
@@ -99,14 +59,27 @@ paths:
           schema:
             type: string
             format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
           description: Forecast date (YYYY-MM-DD)
+        - in: query
+          name: long
+          required: true
+          schema:
+            type: string
+          description: Longitude
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: string
+          description: Latitude
       responses:
         '200':
           description: Weather data returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WeatherInfo'
+                $ref: '#/components/schemas/ForecastInfo'
         '400':
           description: Bad request - missing or invalid city parameter
         '500':
@@ -132,6 +105,19 @@ components:
         timestamp:
           type: string
           format: date-time
+        longitude:
+          type: string
+        latitude:
+          type: string
+      example:
+        city: "Auckland"
+        temperature: 20.5
+        condition: "Cloudy"
+        humidity: 65
+        windSpeed: 5.5
+        timestamp: "2025-04-15T10:00:00Z"
+        longitude: "174.7633"
+        latitude: "-36.8485"
     TemperatureInfo:
       type: object
       properties:
@@ -140,3 +126,63 @@ components:
         temperature:
           type: number
           format: float
+    ForecastInfo:
+      type: object
+      properties:
+        city:
+          type: string
+        temperature:
+          type: number
+          format: float
+        condition:
+          type: string
+        humidity:
+          type: integer
+        windSpeed:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+        precipitationProbability:
+          type: number
+          format: float
+        thunderstormProbability:
+          type: number
+          format: float
+        longitude:
+          type: string
+        latitude:
+          type: string
+      example:
+        city: "Auckland"
+        temperature: 20.5
+        condition: "Cloudy"
+        humidity: 65
+        windSpeed: 5.5
+        timestamp: "2025-04-15T10:00:00Z"
+        precipitationProbability: 0.2
+        thunderstormProbability: 0.1
+        longitude: "174.7633"
+        latitude: "-36.8485"
+    Error:
+      title: Error object returned with 4XX HTTP Status
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
+          description: Error message.
+        description:
+          type: string
+          description: |
+            A detail description about the error message.
+        moreInfo:
+          type: string
+          description: |
+            Preferably an url with more details about the error.

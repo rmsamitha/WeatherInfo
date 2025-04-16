@@ -36,9 +36,10 @@ public class WeatherProviderImpl {
     private static final String CHRISTCHURCH = "Christchurch";
 
     // Example in-memory weather data for different cities for simulation purposes
-    WeatherInfo weatherInfoAuckland = new WeatherInfo(AUCKLAND, 15, 43, 33, 26);
-    WeatherInfo weatherInfoWellington = new WeatherInfo(WELLINGTON, 20, 50, 40, 30);
-    WeatherInfo weatherInfoChristchurch = new WeatherInfo(CHRISTCHURCH, 10, 30, 20, 15);
+    WeatherInfo weatherInfoAuckland = new WeatherInfo(AUCKLAND, 15, 43, 33, 26, "2025-01-01T10:00:00Z", "43", "54");
+    WeatherInfo weatherInfoWellington = new WeatherInfo(WELLINGTON, 20, 50, 40, 30, "2025-01-01T10:00:00Z", "42", "49");
+    WeatherInfo weatherInfoChristchurch = new WeatherInfo(CHRISTCHURCH, 10, 30, 20, 15, "2025-01-01T10:00:00Z", "44",
+            "57");
 
     private static final WeatherProviderImpl instance = new WeatherProviderImpl();
     String externalWeatherInfoApiUrl = "https://api.openweathermap.org/data/2.5/weather";
@@ -57,33 +58,43 @@ public class WeatherProviderImpl {
      * @param cityName Name of the city for which to retrieve weather data.
      * @return WeatherInfo object containing weather data for the specified city.
      */
-    public Response getWeatherDataByCity(String cityName) {
-        if (cityName == null || cityName.isEmpty()) {
-            String errorDescription = "City name cannot be null or empty.";
+    public Response getCurrentWeather(String cityName, String longitude, String latitude) {
+        WeatherInfo weatherInfo;
+        String httpRequestUrl;
+        if (cityName != null && !cityName.isEmpty()) {
+            httpRequestUrl = externalWeatherInfoApiUrl + "?q=" + cityName + "&appid" +
+                    "=439d4b804bc8187953eb36d2a8c26a02";
+        } else if ((longitude != null && !longitude.isEmpty()) &&
+                (latitude != null && !latitude.isEmpty())) {
+            httpRequestUrl = externalWeatherInfoApiUrl + "?lon=" + longitude + "&lat=" + latitude + "&appid" +
+                    "=439d4b804bc8187953eb36d2a8c26a02";
+        } else {
+            String errorDescription = "Either city name or coordinates cannot be null or empty.";
             return WeatherImplUtils.buildBadRequestResponse(errorDescription);
         }
+
         // TODO: Implement retrieval from persistent storage
         // Simulate fetching weather data from in-memory data
-        WeatherInfo weatherInfo = getInMemoryWeatherData(cityName);
+        weatherInfo = getInMemoryWeatherData(cityName, longitude, latitude);
         log.debug("Getting weather data for city: " + cityName);
 
-        // If no data is found in memory matching to the hardcoded city names, make an HTTP request to the external API
+        // If no data is found in memory matching to the hardcoded city names or cordinates, make an HTTP request to
+        // the external API
         if (weatherInfo == null) {
             log.debug("No weather data found for city: " + cityName + ". Making an HTTP request to external API.");
             // Create http client and make a request to an external weather info API
             CloseableHttpClient httpClient = WeatherImplUtils.getHttpClient();
             // appid given is incorrect and will give 401 error
-            HttpGet httpGetRequest = new HttpGet(externalWeatherInfoApiUrl + "?q=" + cityName + "&appid" +
-                    "=439d4b804bc8187953eb36d2a8c26a02");
+            HttpGet httpGetRequest = new HttpGet(httpRequestUrl);
 
             try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
                 if (response.getStatusLine().getStatusCode() == 401) { // similar to 200 implementation
                     // Since the external API is not authenticated, it will return 401 always. Hence hardcoded
                     // WeatherInfo object for simulation purposes
-                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
+                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45, "2025-01-01T10:00:00Z", "44", "68");
                 } else if (response.getStatusLine().getStatusCode() == 200) {
                     // Here we should ideally parse the response and create a WeatherInfo object from it.
-                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45);
+                    weatherInfo = new WeatherInfo(cityName, 16, 67, 54, 45, "2025-01-01T10:00:00Z", "44", "68");
                 } else {
                     String errorDescription = "Error occurred from the external weather info API: " +
                             response.getStatusLine().getReasonPhrase();
@@ -98,12 +109,15 @@ public class WeatherProviderImpl {
     }
 
     /**
-     * Retrieves weather data from in-memory storage based on the city name.
+     * Retrieves weather data from in-memory storage based on city name or longitude and latitude.
      *
-     * @param cityName Name of the city for which to retrieve weather data.
+     * @param cityName  Name of the city for which to retrieve weather data.
+     * @param longitude Longitude of the location.
+     * @param latitude  Latitude of the location.
      * @return WeatherInfo object containing weather data for the specified city.
      */
-    private WeatherInfo getInMemoryWeatherData(String cityName) {
+    private WeatherInfo getInMemoryWeatherData(String cityName, String longitude, String latitude) {
+        // TODO: NOTE: In-Memory data retrieval from longitude and latitude is not implemented
         if (cityName.equalsIgnoreCase(AUCKLAND)) {
             return weatherInfoAuckland;
         } else if (cityName.equalsIgnoreCase(WELLINGTON)) {

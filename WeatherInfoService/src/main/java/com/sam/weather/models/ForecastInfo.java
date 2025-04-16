@@ -17,25 +17,27 @@
 package com.sam.weather.models;
 
 /**
- * WeatherInfo class represents the weather information for a specific city.
- * It contains details such as temperature, precipitation, humidity, and wind speed.
+ * ForecastInfo class represents the weather forecast information for a specific city.
+ * It contains details such as temperature, humidity, wind speed, precipitation probability,
+ * thunderstorm probability, and the date and time of the forecast.
  */
-public class WeatherInfo {
+public class ForecastInfo {
     private String cityName;
     private int temperature;
-    private int precipitation;
     private int humidity;
     private int windSpeed;
+    private int precipitationProb;
+    private int thunderstormProb;
     private String dateTime;
+    private float latitude;
+    private float longitude;
 
-    private String longitude;
-    private String latitude;
-
-    public WeatherInfo(String cityName, int temperature, int precipitation, int humidity, int windSpeed,
-                       String dateTime, String latitude, String longitude) {
+    public ForecastInfo(String cityName, int temperature, int precipitation, int humidity, int windSpeed,
+                        int precipitationProb, int thunderstormProb, String dateTime, float latitude, float longitude) {
         this.cityName = cityName;
         this.temperature = temperature;
-        this.precipitation = precipitation;
+        this.precipitationProb = precipitationProb;
+        this.thunderstormProb = thunderstormProb;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
         this.dateTime = dateTime;
@@ -51,8 +53,8 @@ public class WeatherInfo {
         return temperature;
     }
 
-    public int getPrecipitation() {
-        return precipitation;
+    public int getPrecipitationProb() {
+        return precipitationProb;
     }
 
     public int getHumidity() {
@@ -67,12 +69,16 @@ public class WeatherInfo {
         return dateTime;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public int getThunderstormProb() {
+        return thunderstormProb;
     }
 
-    public String getLatitude() {
+    public float getLatitude() {
         return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
     }
 
     public void setCityName(String cityName) {
@@ -83,8 +89,8 @@ public class WeatherInfo {
         this.temperature = temperature;
     }
 
-    public void setPrecipitation(int precipitation) {
-        this.precipitation = precipitation;
+    public void setPrecipitationProb(int precipitationProb) {
+        this.precipitationProb = precipitationProb;
     }
 
     public void setHumidity(int humidity) {
@@ -99,11 +105,15 @@ public class WeatherInfo {
         this.dateTime = dateTime;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setThunderstormProb(int thunderstormProb) {
+        this.thunderstormProb = thunderstormProb;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(float latitude) {
         this.latitude = latitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 }

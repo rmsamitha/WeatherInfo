@@ -5,7 +5,7 @@
 
 # Define paths
 TOMCAT_WEBAPPS="/c/Program Files/Apache Software Foundation/Tomcat 9.0/webapps"
-WAR_SOURCE="/c/Users/hsemi/SamithaFiles/Repositories/WeatherInfoService/WeatherInfoService/target/WeatherInfoService.war"
+WAR_SOURCE="/c/Users/hsemi/SamithaFiles/Repositories/WeatherInfo/WeatherInfoService/target/WeatherInfoService.war"
 WAR_DEST="$TOMCAT_WEBAPPS/WeatherInfoService.war"
 APP_FOLDER="$TOMCAT_WEBAPPS/WeatherInfoService"
 

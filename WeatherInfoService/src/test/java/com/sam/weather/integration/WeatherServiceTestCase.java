@@ -27,11 +27,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import com.google.gson.Gson;
 
-public class WeatherServiceIntegrationTestCase {
+public class WeatherServiceTestCase {
     private static CloseableHttpClient httpClient;
     private static final String SERVICE_BASE_URL = "http://localhost:8080/WeatherInfoService/weather";
 
-    private static final Log log = LogFactory.getLog(WeatherServiceIntegrationTestCase.class);
+    private static final Log log = LogFactory.getLog(WeatherServiceTestCase.class);
     private static final String IN_MEMORY_AVAILABLE_CITY_AUCKLAND = "Auckland";
     private static final String IN_MEMORY_UNAVAILABLE_CITY_WAIKATO = "Waikato";
 
@@ -44,8 +44,8 @@ public class WeatherServiceIntegrationTestCase {
     }
 
     @Test(description = "Testing the getting weather by city name")
-    public void testGetWeatherByInMemoryAvailableCity() {
-        String url = SERVICE_BASE_URL + "/current/city?city=" + IN_MEMORY_AVAILABLE_CITY_AUCKLAND;
+    public void testGetWeatherByInMemoryAvailableLocation() {
+        String url = SERVICE_BASE_URL + "/current?city=" + IN_MEMORY_AVAILABLE_CITY_AUCKLAND;
         HttpGet httpGetRequest = new HttpGet(url);
 
         try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {
@@ -64,8 +64,8 @@ public class WeatherServiceIntegrationTestCase {
     }
 
     @Test(description = "Testing the getting weather by city name")
-    public void testGetWeatherByInMemoryUnAvailableCity() {
-        String url = SERVICE_BASE_URL + "/current/city?city=" + IN_MEMORY_UNAVAILABLE_CITY_WAIKATO;
+    public void testGetWeatherByInMemoryUnAvailableLocation() {
+        String url = SERVICE_BASE_URL + "/current?city=" + IN_MEMORY_UNAVAILABLE_CITY_WAIKATO;
         HttpGet httpGetRequest = new HttpGet(url);
 
         try (CloseableHttpResponse response = httpClient.execute(httpGetRequest)) {

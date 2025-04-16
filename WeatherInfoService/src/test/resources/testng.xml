@@ -18,7 +18,7 @@
 <suite name="WeatherServiceTestSuite" verbose="2" parallel="false">
     <test name="WeatherServiceIntegrationTests">
         <classes>
-            <class name="com.sam.weather.integration.WeatherServiceIntegrationTestCase"/>
+            <class name="com.sam.weather.integration.WeatherServiceTestCase"/>
         </classes>
     </test>
 </suite>

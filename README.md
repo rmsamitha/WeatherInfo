@@ -40,32 +40,31 @@ A war file named WeatherInfoService.war file is created by above build operation
 
 The API Resources exposed by this service are listed below
 
-| HTTP Method                                                                                      | HTTP Request Path                              | Description                           |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------- |
-| GET                     | /weather/current/city             | Get current weather by city           |
-| GET | /weather/current/city/temperature | Get temperature by city               |
-| GET         | /weather/current/coordinate       | Get current weather by coordinates    |
-| GET                  | /weather/forecast/city            | Get weather forecast by city and date |
+| HTTP Method                                                                                      | HTTP Request Path                              | Description                           |               Query Params |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------- | --------------------- |
+| GET | /weather/current | Get current weather by city or coordinates  | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
+| GET | /weather/current/temperature | Get temperature by city or coordinates | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
+| GET | /weather/forecast | Get weather forecast by date and city or coordinates |  'city' (string) or 'longitude' (string) & 'latitude' (string) |
 
- - **GET** /weather/current/city Endpoint is implemented fully and can be invoked by a http client as below.
+ - **GET** /weather/current Endpoint is implemented fully with the Query Param 'city' only and can be invoked by a http client as below.
 
  #### Sample Request: (CURL Command)
 
  *Format:*
 
  ```js 
- curl -X GET "http://localhost:8080/WeatherInfoService/weather/current/city?city=<CITY_NAME>" 
+ curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=<CITY_NAME>" 
  ```
  
  *Sample Command:*
 
  ```js
- curl -X GET "http://localhost:8080/WeatherInfoService/weather/current/city?city=Auckland" 
+ curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=Auckland" 
  ```
 
 *Sample Response:*
 ```json
-{"cityName":"Auckland","temperature":15,"precipitation":43,"humidity":33,"windSpeed":26}
+{"cityName":"Auckland","temperature":15,"precipitation":43,"humidity":33,"windSpeed":26,"dateTime":"2025-01-01T10:00:00Z","longitude":"54","latitude":"43"}
 ```
 
 ### Endpoints Authorization
