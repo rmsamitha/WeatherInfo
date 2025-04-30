@@ -19,9 +19,10 @@
 
 ## Technologies Used
 
-- Java with JAX-RS, Apache CXF
-- This is an implementation of a JAX-RS REST API.
-- Apache CXF is the web service framework used to implement JAX-RS (REST) APIs
+- Java with JAX-RS : This project is an implementation of a JAX-RS REST API.
+- Apache CXF: Apache CXF is the web service framework used to implement JAX-RS (REST) APIs
+- Spring Dependencies : To configure JAX-RS configurations, Spring libraries are used. Apach CSF is well integrated with Spring and it is using Spring internally.
+- Maven : The build automation and dependency management tool (for compiling, testing, packaging, and managing libraries)
 
 ## How to Build and Deploy
 
@@ -30,39 +31,41 @@
 ```shell
 mvn clean install
 ```
+
 A war file named WeatherInfoService.war file is created by above build operation in ```target/``` dir
 
 2. Deploy this WeatherInfoService.war file in a preferred web server.
-(I'm testing this in a local tomcat server. The shell scrip used to copy the .war file is uploaded in this git repository. i.e. <REPO_ROOT>/deploy_weatherinfo.sh )
-
+   (I'm testing this in a local tomcat server. The shell scrip used to copy the .war file is uploaded in this git repository. i.e. <REPO_ROOT>/deploy_weatherinfo.sh )
 
 ## API Endpoints Invocation
 
 The API Resources exposed by this service are listed below
 
-| HTTP Method                                                                                      | HTTP Request Path                              | Description                           |               Query Params |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------- | --------------------- |
-| GET | /weather/current | Get current weather by city or coordinates  | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
-| GET | /weather/current/temperature | Get temperature by city or coordinates | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
-| GET | /weather/forecast | Get weather forecast by date and city or coordinates |  'city' (string) or 'longitude' (string) & 'latitude' (string) |
 
- - **GET** /weather/current Endpoint is implemented fully with the Query Param 'city' only and can be invoked by a http client as below.
+| HTTP Method | HTTP Request Path            | Description                                          | Query Params                                                  |
+| ----------- | ---------------------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
+| GET         | /weather/current             | Get current weather by city or coordinates           | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
+| GET         | /weather/current/temperature | Get temperature by city or coordinates               | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
+| GET         | /weather/forecast            | Get weather forecast by date and city or coordinates | 'city' (string) or 'longitude' (string) & 'latitude' (string) |
 
- #### Sample Request: (CURL Command)
+- **GET** /weather/current Endpoint is implemented fully with the Query Param 'city' only and can be invoked by a http client as below.
 
- *Format:*
+#### Sample Request: (CURL Command)
 
- ```js 
- curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=<CITY_NAME>" 
- ```
- 
- *Sample Command:*
+*Format:*
 
- ```js
- curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=Auckland" 
- ```
+```js
+curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=<CITY_NAME>" 
+```
+
+*Sample Command:*
+
+```js
+curl -X GET "http://localhost:8080/WeatherInfoService/weather/current?city=Auckland" 
+```
 
 *Sample Response:*
+
 ```json
 {"cityName":"Auckland","temperature":15,"precipitation":43,"humidity":33,"windSpeed":26,"dateTime":"2025-01-01T10:00:00Z","longitude":"54","latitude":"43"}
 ```
@@ -72,8 +75,9 @@ The API Resources exposed by this service are listed below
 Endpoints exposed are not protected with any authentication/authorization mechanism.
 
 ## Automation Tests
-- Integration tests are implemented with the use of Testng 
+
+- Integration tests are implemented with the use of Testng
 - The maven-surefire-plugin is used to run integration tests during the build process.
-i.e. ```mvn test``` command will run the integration tests on the service deployed in a server and exposed on "https://localhost:8080/"
+  i.e. ```mvn test``` command will run the integration tests on the service deployed in a server and exposed on "https://localhost:8080/"
 - So make sure to deploy the server before running tests. (local Tomcat server can be used for this).
 - Starting an embedded server when running the tests is also possible, but it is not implemented at this phase.
